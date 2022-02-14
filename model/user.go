@@ -11,7 +11,6 @@ type User struct {
 
 	UserName string `json:"username" comment:"用户名"`
 	Password string `json:"password" comment:"密码"`
-	Remeber  bool   `json:"remember" comment:"记住密码"`
 	Nickname string `json:"nickName" comment:"昵称"`
 	Avatar   string `json:"avatar" comment:"头像"`
 }

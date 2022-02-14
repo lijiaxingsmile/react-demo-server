@@ -16,6 +16,11 @@ func autoMigrate(db *gorm.DB) {
 		db.AutoMigrate(&model.User{})
 		log.Println("创建用户表成功")
 	}
+
+	if (!db.Migrator().HasTable(&model.Menu{})) {
+		db.AutoMigrate(&model.Menu{})
+		log.Println("创建菜单表成功")
+	}
 }
 
 func PostgresStart() *gorm.DB {

@@ -28,6 +28,7 @@ func Start(r *gin.Engine) {
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		auth.GET("/user", api.GetUser)
+		auth.GET("/menus", api.GetMenus)
 	}
 
 }

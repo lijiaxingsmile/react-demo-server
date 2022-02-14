@@ -31,6 +31,7 @@ func JwtInit(r *gin.Engine) *jwt.GinJWTMiddleware {
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
+		// 上下文
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*model.User); ok {
 				return jwt.MapClaims{
@@ -46,13 +47,13 @@ func JwtInit(r *gin.Engine) *jwt.GinJWTMiddleware {
 				UserName: claims[identityKey].(string),
 			}
 		},
+		// 登陆验证
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var loginVals login
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
 
-			// 查询数据库
 			userRecord := &model.User{
 				UserName: loginVals.Username,
 				Password: loginVals.Password,
@@ -72,14 +73,14 @@ func JwtInit(r *gin.Engine) *jwt.GinJWTMiddleware {
 			}
 			return false
 		},
+		// 登录成功后的回调
 		LoginResponse: func(c *gin.Context, code int, token string, expire time.Time) {
-
 			c.JSON(200, util.Response(true, "登录成功", gin.H{
-				"token":    token,
-				"expire":   expire.Format(time.RFC3339),
-				"remember": false,
+				"token":  token,
+				"expire": expire.Format(time.RFC3339),
 			}))
 		},
+		// 验证失败
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			if strings.HasSuffix(c.Request.URL.Path, "/login") {
 				c.JSON(200, util.Response(false, "用户名或密码错误", nil))
