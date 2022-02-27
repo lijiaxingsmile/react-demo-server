@@ -13,14 +13,7 @@ func Start(r *gin.Engine) {
 
 	v1 := r.Group("/v1")
 	v1.GET("/ping", api.Ping)
-
 	v1.POST("/login", authMiddleware.LoginHandler)
-
-	// r.NoRoute(authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
-	// 	claims := jwt.ExtractClaims(c)
-	// 	log.Printf("NoRoute claims: %#v\n", claims)
-	// 	c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
-	// })
 
 	auth := v1.Group("/auth")
 
@@ -28,7 +21,12 @@ func Start(r *gin.Engine) {
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		auth.GET("/user", api.GetUser)
+
 		auth.GET("/menus", api.GetMenus)
+		auth.GET("/menu", api.GetMenu)
+		auth.POST("/menu", api.CreateMenu)
+		auth.DELETE("/menus", api.BatchDeleteMenus)
+		auth.PUT("/menu", api.UpdateMenu)
 	}
 
 }

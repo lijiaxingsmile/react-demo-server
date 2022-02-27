@@ -1,6 +1,6 @@
 {
   "port": "8080",
   "env": "debug",
-  "trusted_proxies": ["192.168.1.105"],
+  "trusted_proxies": ["127.0.0.1"],
   "dsn": "host=localhost user=postgres password=root dbname=demo port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 }

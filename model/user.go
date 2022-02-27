@@ -2,12 +2,10 @@ package model
 
 import (
 	"react-demo-server/db"
-
-	"gorm.io/gorm"
 )
 
 type User struct {
-	gorm.Model
+	BaseModel
 
 	UserName string `json:"username" comment:"用户名"`
 	Password string `json:"password" comment:"密码"`
@@ -27,7 +25,7 @@ func GetUser(id uint, needPassword bool) (User, error) {
 	if !needPassword {
 		omitColumns = append(omitColumns, "password")
 	}
-	err := db.DB.First(&user, id).Omit(omitColumns...).Error
+	err := db.DB.Take(&user, id).Omit(omitColumns...).Error
 	return user, err
 }
 
