@@ -27,6 +27,12 @@ func Start(r *gin.Engine) {
 		auth.POST("/menu", api.CreateMenu)
 		auth.DELETE("/menus", api.BatchDeleteMenus)
 		auth.PUT("/menu", api.UpdateMenu)
+
+		auth.GET("/roles", api.GetRoles)
+		auth.GET("/role", api.GetRole)
+		auth.POST("/role", api.CreateRole)
+		auth.DELETE("/roles", api.BatchDeleteRoles)
+		auth.PUT("/role", api.UpdateRole)
 	}
 
 }

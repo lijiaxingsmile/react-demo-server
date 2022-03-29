@@ -246,3 +246,119 @@ func BatchDeleteMenus(c *gin.Context) {
 	}
 	c.JSON(200, util.Response(true, "删除菜单成功", nil))
 }
+
+// 获取角色列表
+func GetRoles(c *gin.Context) {
+	roles, err := model.GetRoles()
+	if err != nil {
+		c.JSON(200, util.Response(false, "获取角色列表失败", nil))
+		return
+	}
+	c.JSON(200, util.Response(true, "获取角色列表成功", roles))
+}
+
+func GetRole(c *gin.Context) {
+
+	id := c.Query("id")
+	if id == "" {
+		c.JSON(404, util.Response(false, "找不到对应角色信息", nil))
+		return
+	}
+
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(404, util.Response(false, "找不到对应角色信息", nil))
+		return
+	}
+
+	role := &model.Role{}
+	role.ID = uint(idInt)
+
+	err = role.Get()
+	if err != nil {
+		c.JSON(200, util.Response(false, "获取角色信息失败", nil))
+		return
+	}
+	c.JSON(200, util.Response(true, "获取角色信息成功", role))
+}
+
+func UpdateRole(c *gin.Context) {
+	var role model.Role
+	err := c.ShouldBindJSON(&role)
+	if err != nil {
+		c.JSON(200, util.Response(false, "角色信息不能为空", nil))
+		return
+	}
+	err = role.Update()
+	if err != nil {
+		c.JSON(200, util.Response(false, "更新角色信息失败", nil))
+		return
+	}
+	c.JSON(200, util.Response(true, "更新角色信息成功", nil))
+}
+
+func DeleteRole(c *gin.Context) {
+	id := c.Query("id")
+	if id == "" {
+		c.JSON(404, util.Response(false, "找不到对应角色信息", nil))
+		return
+	}
+
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(404, util.Response(false, "找不到对应角色信息", nil))
+		return
+	}
+
+	role := &model.Role{}
+	role.ID = uint(idInt)
+
+	err = role.Delete()
+	if err != nil {
+		c.JSON(200, util.Response(false, "删除角色信息失败", nil))
+		return
+	}
+	c.JSON(200, util.Response(true, "删除角色信息成功", nil))
+}
+
+func BatchDeleteRoles(c *gin.Context) {
+	idsQuery := c.Query("id")
+	ids := strings.Split(idsQuery, ",")
+
+	if len(ids) == 0 {
+		c.JSON(200, util.Response(false, "角色ID不能为空", nil))
+		return
+	}
+
+	idsSlice := make([]uint, 0, len(ids))
+	for _, id := range ids {
+		idInt, err := strconv.Atoi(id)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, util.Response(false, "角色ID不能为空", nil))
+			return
+		}
+		idsSlice = append(idsSlice, uint(idInt))
+	}
+
+	err := model.DeleteRoles(idsSlice)
+	if err != nil {
+		c.JSON(200, util.Response(false, "删除角色失败", nil))
+		return
+	}
+	c.JSON(200, util.Response(true, "删除角色成功", nil))
+}
+
+func CreateRole(c *gin.Context) {
+	var role model.Role
+	err := c.ShouldBindJSON(&role)
+	if err != nil {
+		c.JSON(200, util.Response(false, "角色信息不能为空", nil))
+		return
+	}
+	err = role.Create()
+	if err != nil {
+		c.JSON(200, util.Response(false, "创建角色失败", nil))
+		return
+	}
+	c.JSON(200, util.Response(true, "创建角色成功", nil))
+}

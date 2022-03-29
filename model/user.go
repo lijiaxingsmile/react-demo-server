@@ -11,6 +11,9 @@ type User struct {
 	Password string `json:"password" comment:"密码"`
 	Nickname string `json:"nickName" comment:"昵称"`
 	Avatar   string `json:"avatar" comment:"头像"`
+
+	// 权限
+	Role string `json:"role" comment:"角色"`
 }
 
 func GetUserByUserName(username string) (User, error) {
